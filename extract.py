@@ -1,8 +1,6 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 """Extract JPG data from files"""
-"""Designed intially for Android Thumbdata3 files"""
-"""but will work on any file that contains JPG data within it"""
 
 import argparse
 
@@ -12,14 +10,18 @@ parser.add_argument('--file', dest='FileName', type=str, help='Filename containi
 
 args = parser.parse_args()
 
-print args.FileName
+print (args.FileName)
 
 f=open(args.FileName,'rb')
 tdata = f.read()
 f.close()
 
-ss = '\xff\xd8'
-se = '\xff\xd9'
+#
+#  The ss and se flags are set for the JFIF/JPG magic numbers.  Modify these if you are looking for a different file type.
+#
+
+ss = b'\xff\xd8'
+se = b'\xff\xd9'
 
 count = 0
 start = 0
@@ -30,7 +32,7 @@ while True:
     x2 = tdata.find(se,x1)
     jpg = tdata[x1:x2+1]
     count += 1
-    fname = 'extracted%d03.jpg' % (count)
+    fname = f'extracted{count:03}.jpg'
     fw = open(fname,'wb')
     fw.write(jpg)
     fw.close()
